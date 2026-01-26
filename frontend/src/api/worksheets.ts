@@ -56,6 +56,6 @@ export const worksheetsApi = {
    */
   async getSimilar(slug: string): Promise<WorksheetListItem[]> {
     const { data } = await apiClient.get(`/api/worksheets/${slug}/similar/`)
-    return data
+    return data.results || data
   },
 }
