@@ -1,0 +1,51 @@
+name: Deploy to Production (Docker)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Deploy to server via SSH
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          cd /var/www/smartleaves
+
+          # Подтянуть последние изменения
+          git pull origin main
+
+          # Остановить контейнеры
+          docker-compose -f docker-compose.prod.yml down
+
+          # Пересобрать образы
+          docker-compose -f docker-compose.prod.yml build --no-cache
+
+          # Запустить контейнеры
+          docker-compose -f docker-compose.prod.yml up -d
+
+          # Очистить неиспользуемые образы
+          docker image prune -af
+
+          # Показать статус
+          docker-compose -f docker-compose.prod.yml ps
+
+          echo "✅ Deployment completed!"
+
+    - name: Notify on success
+      if: success()
+      run: echo "🚀 Deployment successful!"
+
+    - name: Notify on failure
+      if: failure()
+      run: echo "❌ Deployment failed!"

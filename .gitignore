@@ -94,3 +94,10 @@ coverage.xml
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# Docker
+.env.prod
+backups/
+
+# SSL Certificates
+certbot/
