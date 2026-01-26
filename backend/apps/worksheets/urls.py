@@ -27,4 +27,8 @@ urlpatterns = [
     # Детали worksheet по slug (карточка)
     # GET /api/worksheets/slozhenie-v-predelah-10/
     path('<slug:slug>/', views.WorksheetDetailView.as_view(), name='detail'),
+
+    # Похожие worksheet
+    # GET /api/worksheets/slozhenie-v-predelah-10/similar/
+    path('<slug:slug>/similar/', views.WorksheetSimilarView.as_view(), name='similar'),
 ]

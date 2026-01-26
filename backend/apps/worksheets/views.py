@@ -329,3 +329,46 @@ class WorksheetsByTagView(generics.ListAPIView):
             is_published=True,
             tags=tag
         ).select_related('category').prefetch_related('tags')
+
+
+@extend_schema(
+    tags=['Рабочие листы'],
+    summary='Похожие рабочие листы',
+    description='''
+    Получить похожие рабочие листы из той же категории.
+
+    Возвращает до 4 рандомных worksheet из той же категории, исключая текущий.
+    Полезно для блока "Вам может понравиться" на странице worksheet.
+    ''',
+    parameters=[
+        OpenApiParameter(
+            name='slug',
+            type=OpenApiTypes.STR,
+            location=OpenApiParameter.PATH,
+            description='Slug рабочего листа',
+            required=True,
+        ),
+    ],
+)
+class WorksheetSimilarView(generics.ListAPIView):
+    """
+    Получение похожих рабочих листов из той же категории
+    """
+    serializer_class = WorksheetListSerializer
+
+    def get_queryset(self):
+        slug = self.kwargs.get('slug')
+
+        # Получаем текущий worksheet
+        worksheet = get_object_or_404(
+            Worksheet.objects.filter(is_published=True),
+            slug=slug
+        )
+
+        # Возвращаем 4 рандомных worksheet из той же категории (кроме текущего)
+        return Worksheet.objects.filter(
+            is_published=True,
+            category=worksheet.category
+        ).exclude(
+            id=worksheet.id
+        ).select_related('category').prefetch_related('tags').order_by('?')[:4]

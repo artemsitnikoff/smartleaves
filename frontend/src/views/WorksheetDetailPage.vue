@@ -154,6 +154,17 @@
           </div>
         </div>
       </div>
+
+      <!-- Похожие рабочие листы --><div v-if="similarWorksheets.length > 0" class="mt-12">
+        <h2 class="text-2xl font-bold mb-6">Похожие рабочие листы</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <WorksheetCard
+            v-for="similar in similarWorksheets"
+            :key="similar.id"
+            :worksheet="similar"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -162,7 +173,8 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { worksheetsApi } from '@/api/worksheets'
-import type { WorksheetDetail, GradeLevel, Difficulty } from '@/types'
+import type { WorksheetDetail, WorksheetListItem, GradeLevel, Difficulty } from '@/types'
+import WorksheetCard from '@/components/WorksheetCard.vue'
 
 const route = useRoute()
 const slug = route.params.slug as string
@@ -171,6 +183,7 @@ const worksheet = ref<WorksheetDetail | null>(null)
 const loading = ref(false)
 const error = ref<string | null>(null)
 const downloading = ref(false)
+const similarWorksheets = ref<WorksheetListItem[]>([])
 
 async function loadWorksheet() {
   loading.value = true
@@ -178,11 +191,21 @@ async function loadWorksheet() {
 
   try {
     worksheet.value = await worksheetsApi.getDetail(slug)
+    // Загружаем похожие рабочие листы
+    await loadSimilarWorksheets()
   } catch (e) {
     error.value = 'Не удалось загрузить рабочий лист'
     console.error('Failed to fetch worksheet:', e)
   } finally {
     loading.value = false
+  }
+}
+
+async function loadSimilarWorksheets() {
+  try {
+    similarWorksheets.value = await worksheetsApi.getSimilar(slug)
+  } catch (e) {
+    console.error('Failed to fetch similar worksheets:', e)
   }
 }
 

@@ -50,4 +50,12 @@ export const worksheetsApi = {
     })
     return data
   },
+
+  /**
+   * Получить похожие рабочие листы из той же категории
+   */
+  async getSimilar(slug: string): Promise<WorksheetListItem[]> {
+    const { data } = await apiClient.get(`/api/worksheets/${slug}/similar/`)
+    return data
+  },
 }
