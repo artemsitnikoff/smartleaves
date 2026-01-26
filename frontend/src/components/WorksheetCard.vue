@@ -39,7 +39,7 @@
             :key="tag.id"
             class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded"
           >
-            {{ tag.name }}
+            {{ tag.name }} <span class="text-gray-500">({{ tag.usage_count }})</span>
           </span>
           <span v-if="worksheet.tags.length > 3" class="text-xs text-gray-500">
             +{{ worksheet.tags.length - 3 }}

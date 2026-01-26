@@ -148,7 +148,7 @@
                 :to="`/tag/${tag.slug}`"
                 class="inline-block px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm transition-colors"
               >
-                {{ tag.name }}
+                {{ tag.name }} <span class="text-gray-500">({{ tag.usage_count }})</span>
               </router-link>
             </div>
           </div>
