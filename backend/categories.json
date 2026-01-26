@@ -1,0 +1,58 @@
+[
+  { "title": "Home", "children": [] },
+  { "title": "Worksheet Generator", "children": [] },
+  {
+    "title": "Alphabets",
+    "children": [
+      { "title": "Practice Writing Letters", "children": [] },
+      { "title": "Cursive Handwriting Practice", "children": [] },
+      { "title": "Missing Letters", "children": [] }
+    ]
+  },
+  {
+    "title": "Numbers",
+    "children": [
+      { "title": "Practice Writing Numbers", "children": [] },
+      { "title": "Missing Numbers", "children": [] }
+    ]
+  },
+  {
+    "title": "Maths",
+    "children": [
+      { "title": "Addition", "children": [] },
+      { "title": "Subtraction", "children": [] },
+      { "title": "Multiplication", "children": [] },
+      { "title": "Multiplication Chart", "children": [] },
+      { "title": "Division", "children": [] },
+      { "title": "Counting", "children": [] }
+    ]
+  },
+  {
+    "title": "Vocabulary",
+    "children": [
+      { "title": "Word Search", "children": [] },
+      { "title": "Crossword Puzzle", "children": [] },
+      { "title": "Spelling Word Scramble", "children": [] },
+      { "title": "Sight Words", "children": [] },
+      { "title": "English worksheets", "children": [] },
+      { "title": "Digraph Spelling Worksheets", "children": [] },
+      { "title": "Picture / Shadow Matching", "children": [] },
+      { "title": "Find the same", "children": [] },
+      { "title": "Find the difference", "children": [] }
+    ]
+  },
+  { "title": "Shapes", "children": [] },
+  { "title": "Coloring", "children": [] },
+  { "title": "Dot to Dot", "children": [] },
+  { "title": "Drawing", "children": [] },
+  { "title": "GK", "children": [] },
+  { "title": "Body Parts", "children": [] },
+  { "title": "Cartoon Stickers", "children": [] },
+  { "title": "Patterns", "children": [] },
+  { "title": "Flash Cards", "children": [] },
+  { "title": "Telling Time", "children": [] },
+  { "title": "Tracing Lines", "children": [] },
+  { "title": "Sliding Puzzle", "children": [] },
+  { "title": "Origami", "children": [] },
+  { "title": "Mazes", "children": [] }
+]

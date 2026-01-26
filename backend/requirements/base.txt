@@ -1,0 +1,44 @@
+# Базовые зависимости для проекта "Умные листочки"
+# Python 3.11+
+
+# Django Framework
+Django>=5.0,<5.1
+
+# Wagtail CMS
+wagtail>=6.0,<6.1
+
+# Wagtail ModelAdmin (отдельный пакет для Wagtail 6.0+)
+wagtail-modeladmin>=2.0,<3.0
+
+# Django REST Framework для API
+djangorestframework>=3.14,<4.0
+
+# API документация (Swagger/OpenAPI)
+drf-spectacular>=0.29,<1.0
+
+# Фильтрация для DRF
+django-filter>=23.0,<24.0
+
+# CORS headers для работы с Vue.js фронтендом
+django-cors-headers>=4.0,<5.0
+
+# PostgreSQL драйвер
+psycopg2-binary>=2.9,<3.0
+
+# Работа с изображениями
+Pillow>=10.0,<11.0
+
+# Конвертация PDF в изображения для превью
+pdf2image>=1.16,<2.0
+
+# Переменные окружения из .env файла
+python-dotenv>=1.0,<2.0
+
+# Timezone support
+pytz>=2024.1
+
+# Генерация slug из кириллицы
+python-slugify>=8.0,<9.0
+
+# Генерация PDF файлов (для тестовых данных)
+reportlab>=4.0,<5.0

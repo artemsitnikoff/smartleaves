@@ -1,0 +1,19 @@
+# Development зависимости
+
+# Сначала устанавливаем базовые зависимости
+-r base.txt
+
+# Django Debug Toolbar для отладки
+django-debug-toolbar>=4.2,<5.0
+
+# Качество кода
+flake8>=7.0,<8.0
+black>=24.0,<25.0
+
+# Тестирование
+pytest>=7.4,<8.0
+pytest-django>=4.7,<5.0
+factory-boy>=3.3,<4.0
+
+# Fake data для тестов
+Faker>=22.0,<23.0
