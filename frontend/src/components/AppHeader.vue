@@ -1,17 +1,29 @@
 <template>
   <header class="bg-primary-600 text-white shadow-lg">
-    <div class="container mx-auto px-4 py-6">
-      <!-- Заголовок сайта -->
-      <div class="text-center mb-4">
-        <router-link to="/" class="inline-block">
-          <h1 class="text-4xl font-bold">Умные листочки</h1>
+    <div class="container mx-auto px-4 py-4">
+      <!-- Верхняя часть: Логотип и Telegram -->
+      <div class="flex justify-between items-center mb-4">
+        <!-- Логотип слева -->
+        <router-link to="/" class="flex items-center">
+          <img src="/leaves.png" alt="Умные листочки" style="height: 100px; width: auto;" />
         </router-link>
-        <p v-if="settingsStore.settings" class="text-primary-100 mt-2">
-          {{ settingsStore.settings.header_text }}
-        </p>
+
+        <!-- Иконка Telegram справа -->
+        <a
+          v-if="settingsStore.settings?.telegram_url"
+          :href="settingsStore.settings.telegram_url"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="bg-white hover:bg-gray-100 text-primary-600 p-3 rounded-full transition-colors"
+          aria-label="Telegram"
+        >
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
+          </svg>
+        </a>
       </div>
 
-      <!-- Навигация с категориями (в 2 строки) -->
+      <!-- Навигация с категориями -->
       <nav class="flex flex-wrap justify-center items-center gap-1 max-w-7xl mx-auto">
         <div v-if="categoriesStore.loading" class="text-primary-100">
           Загрузка категорий...
