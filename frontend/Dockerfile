@@ -3,6 +3,9 @@
 # Stage 1: Build
 FROM node:20-alpine AS builder
 
+# Build-time аргументы
+ARG VITE_API_URL
+
 WORKDIR /app
 
 # Копирование package.json и package-lock.json
@@ -14,7 +17,8 @@ RUN npm ci
 # Копирование исходного кода
 COPY . .
 
-# Сборка приложения
+# Сборка приложения с переменными окружения
+ENV VITE_API_URL=$VITE_API_URL
 RUN npm run build
 
 # Stage 2: Production
