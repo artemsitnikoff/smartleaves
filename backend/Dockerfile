@@ -12,8 +12,8 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # Копирование requirements и установка зависимостей
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt gunicorn
+COPY requirements/ requirements/
+RUN pip install --no-cache-dir -r requirements/prod.txt
 
 # Копирование кода приложения
 COPY . .
