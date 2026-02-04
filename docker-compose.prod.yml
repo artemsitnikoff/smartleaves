@@ -33,6 +33,7 @@ services:
       - media_data:/app/media
       - static_data:/app/static
     environment:
+      DJANGO_SETTINGS_MODULE: config.settings.prod
       DEBUG: ${DEBUG:-False}
       SECRET_KEY: ${SECRET_KEY}
       ALLOWED_HOSTS: ${ALLOWED_HOSTS}
