@@ -96,7 +96,6 @@ Temporary Items
 .apdisk
 
 # Docker
-.env.prod
 backups/
 
 # SSL Certificates

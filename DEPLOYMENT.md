@@ -100,10 +100,10 @@ mkdir -p backups
 
 ```bash
 # Скопируйте example файл
-cp .env.prod.example .env.prod
+cp .env.example .env
 
 # Отредактируйте переменные
-nano .env.prod
+nano .env
 ```
 
 **Заполните реальными значениями:**
