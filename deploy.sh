@@ -7,58 +7,65 @@ set -e
 
 COMPOSE_FILE="docker-compose.prod.yml"
 
+# Определяем команду docker compose (поддержка старой и новой версии)
+if command -v docker-compose &> /dev/null; then
+    DOCKER_COMPOSE="docker-compose"
+else
+    DOCKER_COMPOSE="docker compose"
+fi
+
 case "$1" in
   start)
     echo "🚀 Starting containers..."
-    docker-compose -f $COMPOSE_FILE up -d
+    $DOCKER_COMPOSE -f $COMPOSE_FILE up -d
     echo "✅ Containers started!"
-    docker-compose -f $COMPOSE_FILE ps
+    $DOCKER_COMPOSE -f $COMPOSE_FILE ps
     ;;
 
   stop)
     echo "🛑 Stopping containers..."
-    docker-compose -f $COMPOSE_FILE down
+    $DOCKER_COMPOSE -f $COMPOSE_FILE down
     echo "✅ Containers stopped!"
     ;;
 
   restart)
     echo "🔄 Restarting containers..."
-    docker-compose -f $COMPOSE_FILE restart
+    $DOCKER_COMPOSE -f $COMPOSE_FILE restart
     echo "✅ Containers restarted!"
-    docker-compose -f $COMPOSE_FILE ps
+    $DOCKER_COMPOSE -f $COMPOSE_FILE ps
     ;;
 
   rebuild)
     echo "🏗️  Rebuilding and restarting containers..."
-    docker-compose -f $COMPOSE_FILE down
-    docker-compose -f $COMPOSE_FILE build --no-cache
-    docker-compose -f $COMPOSE_FILE up -d
+    $DOCKER_COMPOSE -f $COMPOSE_FILE down
+    $DOCKER_COMPOSE -f $COMPOSE_FILE build --no-cache
+    $DOCKER_COMPOSE -f $COMPOSE_FILE up -d
     echo "✅ Containers rebuilt and started!"
-    docker-compose -f $COMPOSE_FILE ps
+    $DOCKER_COMPOSE -f $COMPOSE_FILE ps
     ;;
 
   logs)
     if [ -z "$2" ]; then
-      docker-compose -f $COMPOSE_FILE logs -f
+      $DOCKER_COMPOSE -f $COMPOSE_FILE logs -f
     else
-      docker-compose -f $COMPOSE_FILE logs -f $2
+      $DOCKER_COMPOSE -f $COMPOSE_FILE logs -f $2
     fi
     ;;
 
   status)
     echo "📊 Container status:"
-    docker-compose -f $COMPOSE_FILE ps
+    $DOCKER_COMPOSE -f $COMPOSE_FILE ps
     ;;
 
   migrate)
     echo "🔄 Running migrations..."
-    docker-compose -f $COMPOSE_FILE exec backend python manage.py migrate
+    $DOCKER_COMPOSE -f $COMPOSE_FILE exec backend python manage.py migrate
     echo "✅ Migrations completed!"
     ;;
 
   shell)
     echo "🐚 Opening Django shell..."
-    docker-compose -f $COMPOSE_FILE exec backend python manage.py shell
+    $DOCKER_COMPOSE -f $COMPOSE_FILE exec backend python manage.py shell
     ;;
 
   backup)
@@ -66,13 +73,13 @@ case "$1" in
     BACKUP_DIR="./backups"
     mkdir -p $BACKUP_DIR
     BACKUP_FILE="$BACKUP_DIR/db_backup_$(date +%Y%m%d_%H%M%S).sql"
-    docker-compose -f $COMPOSE_FILE exec -T db pg_dump -U smartleaves smartleaves > $BACKUP_FILE
+    $DOCKER_COMPOSE -f $COMPOSE_FILE exec -T db pg_dump -U smartleaves smartleaves > $BACKUP_FILE
     echo "✅ Backup saved to: $BACKUP_FILE"
     ;;
 
   ssl)
     echo "🔐 Obtaining SSL certificate..."
-    docker-compose -f $COMPOSE_FILE run --rm certbot certonly \
+    $DOCKER_COMPOSE -f $COMPOSE_FILE run --rm certbot certonly \
       --webroot \
       --webroot-path=/var/www/certbot \
       --email $2 \

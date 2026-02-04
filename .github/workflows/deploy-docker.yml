@@ -25,20 +25,27 @@ jobs:
           # Подтянуть последние изменения
           git pull origin main
 
+          # Определяем команду docker compose
+          if command -v docker-compose &> /dev/null; then
+              DOCKER_COMPOSE="docker-compose"
+          else
+              DOCKER_COMPOSE="docker compose"
+          fi
+
           # Остановить контейнеры
-          docker-compose -f docker-compose.prod.yml down
+          $DOCKER_COMPOSE -f docker-compose.prod.yml down
 
           # Пересобрать образы
-          docker-compose -f docker-compose.prod.yml build --no-cache
+          $DOCKER_COMPOSE -f docker-compose.prod.yml build --no-cache
 
           # Запустить контейнеры
-          docker-compose -f docker-compose.prod.yml up -d
+          $DOCKER_COMPOSE -f docker-compose.prod.yml up -d
 
           # Очистить неиспользуемые образы
           docker image prune -af
 
           # Показать статус
-          docker-compose -f docker-compose.prod.yml ps
+          $DOCKER_COMPOSE -f docker-compose.prod.yml ps
 
           echo "✅ Deployment completed!"
 
