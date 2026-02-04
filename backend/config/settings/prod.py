@@ -8,6 +8,18 @@ from .base import *
 # Debug ДОЛЖЕН быть выключен в production
 DEBUG = False
 
+# PostgreSQL для production
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DB_NAME', 'smartleaves'),
+        'USER': os.getenv('DB_USER', 'smartleaves'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST', 'db'),
+        'PORT': os.getenv('DB_PORT', '5432'),
+    }
+}
+
 # ALLOWED_HOSTS задается через переменную окружения
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
@@ -28,9 +40,7 @@ SECURE_HSTS_SECONDS = 31536000  # 1 year
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 
-# WhiteNoise для обслуживания статических файлов
-MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# Статические файлы обслуживаются через nginx, WhiteNoise не нужен
 
 # DRF настройки для production - только JSON
 REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = [
