@@ -19,7 +19,7 @@ COPY . .
 
 # Сборка приложения с переменными окружения
 ENV VITE_API_URL=$VITE_API_URL
-RUN npm run build
+RUN npm run build:prod
 
 # Stage 2: Production
 FROM nginx:alpine
