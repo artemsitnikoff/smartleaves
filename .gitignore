@@ -99,3 +99,6 @@ backups/
 
 # SSL Certificates
 certbot/
+
+# Data exports - медиа файлы (большие, передаем через scp)
+media_files.tar.gz
