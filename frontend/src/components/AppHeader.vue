@@ -43,7 +43,12 @@
             </router-link>
 
             <!-- Категория с детьми - с выпадающим меню -->
-            <div v-else class="relative dropdown-menu">
+            <div
+              v-else
+              class="relative dropdown-menu"
+              @mouseenter="openMenu(category.id)"
+              @mouseleave="closeMenu()"
+            >
               <button
                 @click.stop="toggleMenu(category.id)"
                 class="bg-primary-700 hover:bg-primary-800 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-1 whitespace-nowrap"
@@ -98,9 +103,19 @@ const route = useRoute()
 // Состояние для отслеживания открытого меню (ID категории)
 const openMenuId = ref<number | null>(null)
 
-// Функция для переключения меню
+// Функция для переключения меню (для мобильных)
 const toggleMenu = (categoryId: number) => {
   openMenuId.value = openMenuId.value === categoryId ? null : categoryId
+}
+
+// Открываем меню при наведении (для десктопа)
+const openMenu = (categoryId: number) => {
+  openMenuId.value = categoryId
+}
+
+// Закрываем меню
+const closeMenu = () => {
+  openMenuId.value = null
 }
 
 // Закрываем меню при изменении маршрута
@@ -108,23 +123,11 @@ watch(() => route.path, () => {
   openMenuId.value = null
 })
 
-// Закрываем меню при клике вне его
-const closeMenuOnClickOutside = (event: MouseEvent) => {
-  const target = event.target as HTMLElement
-  if (!target.closest('.dropdown-menu')) {
-    openMenuId.value = null
-  }
-}
-
 onMounted(() => {
   settingsStore.fetchSettings()
   categoriesStore.fetchCategoryTree()
-  document.addEventListener('click', closeMenuOnClickOutside)
 })
 
 // Очистка при размонтировании
 import { onUnmounted } from 'vue'
-onUnmounted(() => {
-  document.removeEventListener('click', closeMenuOnClickOutside)
-})
 </script>
