@@ -6,6 +6,13 @@ from rest_framework import serializers
 from .models import Category
 
 
+class CategoryParentSerializer(serializers.ModelSerializer):
+    """Упрощенный сериализатор родительской категории"""
+    class Meta:
+        model = Category
+        fields = ['id', 'name', 'slug']
+
+
 class CategorySerializer(serializers.ModelSerializer):
     """
     Базовый сериализатор категории
@@ -15,6 +22,7 @@ class CategorySerializer(serializers.ModelSerializer):
     - Внутри serializers рабочих листов
     """
 
+    parent = CategoryParentSerializer(read_only=True)
     level = serializers.ReadOnlyField()
     is_parent = serializers.ReadOnlyField()
     full_path = serializers.SerializerMethodField()

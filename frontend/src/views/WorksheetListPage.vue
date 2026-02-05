@@ -5,6 +5,18 @@
       <nav class="text-sm text-gray-600 mb-2">
         <router-link to="/" class="hover:text-primary-600">Главная</router-link>
         <span class="mx-2">/</span>
+
+        <!-- Родительская категория если есть -->
+        <template v-if="categorySlug && currentCategory?.parent">
+          <router-link
+            :to="`/category/${currentCategory.parent.slug}`"
+            class="hover:text-primary-600"
+          >
+            {{ currentCategory.parent.name }}
+          </router-link>
+          <span class="mx-2">/</span>
+        </template>
+
         <span v-if="categorySlug && currentCategory">{{ currentCategory.name }}</span>
         <span v-else-if="tagSlug && currentTag">Тег: {{ currentTag.name }}</span>
         <span v-else>Все рабочие листы</span>
@@ -168,17 +180,9 @@ async function loadWorksheets() {
     }
 
     // Если фильтруем по категории
+    // Backend автоматически включит все дочерние категории если они есть
     if (categorySlug.value) {
-      // Если у категории есть дочерние категории, собираем все slug'ы
-      if (currentCategory.value?.children && currentCategory.value.children.length > 0) {
-        const allSlugs = [
-          categorySlug.value,
-          ...currentCategory.value.children.map(child => child.slug)
-        ].join(',')
-        filters.category__slug__in = allSlugs
-      } else {
-        filters.category__slug = categorySlug.value
-      }
+      filters.category__slug = categorySlug.value
     }
 
     // Если фильтруем по тегу

@@ -7,12 +7,18 @@ export interface Tag {
   usage_count: number
 }
 
+export interface CategoryParent {
+  id: number
+  name: string
+  slug: string
+}
+
 export interface Category {
   id: number
   name: string
   slug: string
   description: string
-  parent: number | null
+  parent: CategoryParent | null
   level: number
   is_parent: boolean
   full_path: string

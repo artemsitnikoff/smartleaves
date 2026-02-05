@@ -20,11 +20,32 @@ from .pagination import WorksheetPagination
 
 class WorksheetFilter(FilterSet):
     """Custom filter для поддержки фильтрации по списку slug'ов категорий"""
+    category__slug = CharFilter(method='filter_category_slug')
     category__slug__in = CharFilter(method='filter_category_slugs')
 
     class Meta:
         model = Worksheet
-        fields = ['category', 'category__slug', 'grade_level', 'difficulty', 'tags__slug']
+        fields = ['category', 'grade_level', 'difficulty', 'tags__slug']
+
+    def filter_category_slug(self, queryset, name, value):
+        """Фильтрация по slug категории, автоматически включая дочерние категории"""
+        if not value:
+            return queryset
+
+        from apps.categories.models import Category
+
+        try:
+            category = Category.objects.get(slug=value, is_active=True)
+
+            # Если у категории есть дочерние - включаем их тоже
+            if category.children.exists():
+                child_slugs = category.children.filter(is_active=True).values_list('slug', flat=True)
+                all_slugs = [value] + list(child_slugs)
+                return queryset.filter(category__slug__in=all_slugs)
+            else:
+                return queryset.filter(category__slug=value)
+        except Category.DoesNotExist:
+            return queryset.filter(category__slug=value)
 
     def filter_category_slugs(self, queryset, name, value):
         """Фильтрация по списку slug'ов категорий (через запятую)"""
