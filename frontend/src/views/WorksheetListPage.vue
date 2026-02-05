@@ -147,7 +147,7 @@ import { categoriesApi } from '@/api/categories'
 import { tagsApi } from '@/api/tags'
 import WorksheetCard from '@/components/WorksheetCard.vue'
 import Pagination from '@/components/Pagination.vue'
-import type { WorksheetListItem, Category, Tag, PaginatedResponse } from '@/types'
+import type { WorksheetListItem, CategoryTree, Tag, PaginatedResponse } from '@/types'
 
 const route = useRoute()
 
@@ -158,7 +158,7 @@ const tagSlug = computed(() => route.name === 'tag' ? route.params.slug as strin
 // Данные
 const worksheets = ref<WorksheetListItem[]>([])
 const pagination = ref<Omit<PaginatedResponse<WorksheetListItem>, 'results'> | null>(null)
-const currentCategory = ref<Category | null>(null)
+const currentCategory = ref<CategoryTree | null>(null)
 const currentTag = ref<Tag | null>(null)
 const tags = ref<Tag[]>([])
 

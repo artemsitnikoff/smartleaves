@@ -21,9 +21,9 @@ export const categoriesApi = {
   },
 
   /**
-   * Получить детальную информацию о категории
+   * Получить детальную информацию о категории с дочерними категориями
    */
-  async getDetail(slug: string): Promise<Category> {
+  async getDetail(slug: string): Promise<CategoryTree> {
     const { data } = await apiClient.get(`/api/categories/${slug}/`)
     return data
   },

@@ -58,8 +58,8 @@ class CategoryTreeView(generics.ListAPIView):
     description='''
     Получить подробную информацию о конкретной категории по её slug.
 
-    Возвращает информацию о категории, включая количество рабочих листов
-    и полный путь для построения URL.
+    Возвращает информацию о категории, включая количество рабочих листов,
+    полный путь для построения URL, и список дочерних категорий если они есть.
     ''',
     parameters=[
         OpenApiParameter(
@@ -73,8 +73,8 @@ class CategoryTreeView(generics.ListAPIView):
 )
 class CategoryDetailView(generics.RetrieveAPIView):
     """
-    Детальная информация о категории
+    Детальная информация о категории с дочерними категориями
     """
     queryset = Category.objects.filter(is_active=True)
-    serializer_class = CategorySerializer
+    serializer_class = CategoryTreeSerializer
     lookup_field = 'slug'
