@@ -43,20 +43,27 @@
             </router-link>
 
             <!-- Категория с детьми - с выпадающим меню -->
-            <div v-else class="relative group">
-              <router-link
-                :to="`/category/${category.slug}`"
+            <div v-else class="relative dropdown-menu">
+              <button
+                @click.stop="toggleMenu(category.id)"
                 class="bg-primary-700 hover:bg-primary-800 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-1 whitespace-nowrap"
               >
                 {{ category.name }}
-                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg
+                  class="w-3 h-3 transition-transform"
+                  :class="{ 'rotate-180': openMenuId === category.id }"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
-              </router-link>
+              </button>
 
               <!-- Выпадающее меню дочерних категорий -->
               <div
-                class="absolute left-0 mt-2 w-56 bg-white text-gray-800 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50"
+                v-show="openMenuId === category.id"
+                class="absolute left-0 mt-2 w-56 bg-white text-gray-800 rounded-lg shadow-xl transition-all duration-200 z-50"
               >
                 <div class="py-2">
                   <router-link
@@ -79,15 +86,45 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { useSettingsStore } from '@/stores/settings'
 import { useCategoriesStore } from '@/stores/categories'
 
 const settingsStore = useSettingsStore()
 const categoriesStore = useCategoriesStore()
+const route = useRoute()
+
+// Состояние для отслеживания открытого меню (ID категории)
+const openMenuId = ref<number | null>(null)
+
+// Функция для переключения меню
+const toggleMenu = (categoryId: number) => {
+  openMenuId.value = openMenuId.value === categoryId ? null : categoryId
+}
+
+// Закрываем меню при изменении маршрута
+watch(() => route.path, () => {
+  openMenuId.value = null
+})
+
+// Закрываем меню при клике вне его
+const closeMenuOnClickOutside = (event: MouseEvent) => {
+  const target = event.target as HTMLElement
+  if (!target.closest('.dropdown-menu')) {
+    openMenuId.value = null
+  }
+}
 
 onMounted(() => {
   settingsStore.fetchSettings()
   categoriesStore.fetchCategoryTree()
+  document.addEventListener('click', closeMenuOnClickOutside)
+})
+
+// Очистка при размонтировании
+import { onUnmounted } from 'vue'
+onUnmounted(() => {
+  document.removeEventListener('click', closeMenuOnClickOutside)
 })
 </script>
