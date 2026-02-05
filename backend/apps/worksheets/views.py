@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import FileResponse, Http404
 from django.shortcuts import get_object_or_404
-from django_filters.rest_framework import DjangoFilterBackend
+from django_filters.rest_framework import DjangoFilterBackend, FilterSet, CharFilter
 from rest_framework import filters
 
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
@@ -16,6 +16,22 @@ from drf_spectacular.types import OpenApiTypes
 from .models import Worksheet
 from .serializers import WorksheetListSerializer, WorksheetDetailSerializer
 from .pagination import WorksheetPagination
+
+
+class WorksheetFilter(FilterSet):
+    """Custom filter для поддержки фильтрации по списку slug'ов категорий"""
+    category__slug__in = CharFilter(method='filter_category_slugs')
+
+    class Meta:
+        model = Worksheet
+        fields = ['category', 'category__slug', 'grade_level', 'difficulty', 'tags__slug']
+
+    def filter_category_slugs(self, queryset, name, value):
+        """Фильтрация по списку slug'ов категорий (через запятую)"""
+        if not value:
+            return queryset
+        slugs = [slug.strip() for slug in value.split(',')]
+        return queryset.filter(category__slug__in=slugs)
 
 
 @extend_schema(
@@ -104,7 +120,7 @@ class WorksheetListView(generics.ListAPIView):
     serializer_class = WorksheetListSerializer
     pagination_class = WorksheetPagination
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['category', 'category__slug', 'grade_level', 'difficulty', 'tags__slug']
+    filterset_class = WorksheetFilter
     search_fields = ['title', 'description']
     ordering_fields = ['created_at', 'views_count', 'downloads_count', 'title']
     ordering = ['-created_at']

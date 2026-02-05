@@ -21,6 +21,26 @@
       </p>
     </div>
 
+    <!-- Подкатегории (если есть) -->
+    <div v-if="categorySlug && currentCategory?.children && currentCategory.children.length > 0" class="mb-8">
+      <h2 class="text-xl font-semibold mb-4">Подкатегории</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+        <router-link
+          v-for="child in currentCategory.children"
+          :key="child.id"
+          :to="`/category/${child.slug}`"
+          class="bg-white hover:bg-primary-50 border-2 border-gray-200 hover:border-primary-500 rounded-lg p-4 transition-all text-center group"
+        >
+          <div class="font-medium text-gray-900 group-hover:text-primary-700 mb-1">
+            {{ child.name }}
+          </div>
+          <div class="text-sm text-gray-500">
+            {{ child.worksheets_count }} листов
+          </div>
+        </router-link>
+      </div>
+    </div>
+
     <!-- Основной контент: 70% листы + 30% теги -->
     <div class="grid grid-cols-1 lg:grid-cols-10 gap-8">
       <!-- Список рабочих листов (70%) -->
@@ -149,7 +169,16 @@ async function loadWorksheets() {
 
     // Если фильтруем по категории
     if (categorySlug.value) {
-      filters.category__slug = categorySlug.value
+      // Если у категории есть дочерние категории, собираем все slug'ы
+      if (currentCategory.value?.children && currentCategory.value.children.length > 0) {
+        const allSlugs = [
+          categorySlug.value,
+          ...currentCategory.value.children.map(child => child.slug)
+        ].join(',')
+        filters.category__slug__in = allSlugs
+      } else {
+        filters.category__slug = categorySlug.value
+      }
     }
 
     // Если фильтруем по тегу
