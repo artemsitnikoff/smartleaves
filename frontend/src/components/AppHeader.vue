@@ -24,7 +24,7 @@
       </div>
 
       <!-- Навигация с категориями -->
-      <nav class="flex flex-wrap justify-center items-center gap-1 max-w-7xl mx-auto">
+      <nav class="flex flex-wrap justify-center items-center gap-1 max-w-7xl mx-auto overflow-visible">
         <div v-if="categoriesStore.loading" class="text-primary-100">
           Загрузка категорий...
         </div>
@@ -69,9 +69,9 @@
               <!-- Добавляем padding-top чтобы создать "мост" между кнопкой и меню -->
               <div
                 v-show="openMenuId === category.id"
-                class="absolute left-0 pt-2 z-50"
+                class="absolute left-0 md:left-0 pt-2 z-50 min-w-full md:min-w-0"
               >
-                <div class="w-56 bg-white text-gray-800 rounded-lg shadow-xl">
+                <div class="w-full md:w-56 bg-white text-gray-800 rounded-lg shadow-xl">
                   <div class="py-2">
                     <router-link
                       v-for="child in category.children"
@@ -106,19 +106,26 @@ const route = useRoute()
 // Состояние для отслеживания открытого меню (ID категории)
 const openMenuId = ref<number | null>(null)
 
+// Детектим touch устройство
+const isTouchDevice = ref(false)
+
 // Функция для переключения меню (для мобильных)
 const toggleMenu = (categoryId: number) => {
   openMenuId.value = openMenuId.value === categoryId ? null : categoryId
 }
 
-// Открываем меню при наведении (для десктопа)
+// Открываем меню при наведении (только для non-touch устройств)
 const openMenu = (categoryId: number) => {
-  openMenuId.value = categoryId
+  if (!isTouchDevice.value) {
+    openMenuId.value = categoryId
+  }
 }
 
 // Закрываем меню
 const closeMenu = () => {
-  openMenuId.value = null
+  if (!isTouchDevice.value) {
+    openMenuId.value = null
+  }
 }
 
 // Закрываем меню при изменении маршрута
@@ -129,6 +136,9 @@ watch(() => route.path, () => {
 onMounted(() => {
   settingsStore.fetchSettings()
   categoriesStore.fetchCategoryTree()
+
+  // Определяем touch устройство
+  isTouchDevice.value = 'ontouchstart' in window || navigator.maxTouchPoints > 0
 })
 
 // Очистка при размонтировании

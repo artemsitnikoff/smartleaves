@@ -1,9 +1,11 @@
 @import "tailwindcss";
 
 /* Дополнительные стили */
+html,
 body {
   margin: 0;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  overflow-x: hidden; /* Предотвращаем горизонтальную прокрутку */
 }
 
 /* Стили для прозы (контента из Wagtail) */
