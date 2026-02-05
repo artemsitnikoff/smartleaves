@@ -36,12 +36,12 @@
     </div>
 
     <!-- Популярные категории -->
-    <div v-if="categoriesStore.categoryTree.length > 0" class="mb-12">
+    <div v-if="filteredCategories.length > 0" class="mb-12">
       <h2 class="text-3xl font-bold mb-6">Категории</h2>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div
-          v-for="category in categoriesStore.categoryTree"
+          v-for="category in filteredCategories"
           :key="category.id"
           class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
         >
@@ -89,7 +89,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useSettingsStore } from '@/stores/settings'
 import { useCategoriesStore } from '@/stores/categories'
 import { worksheetsApi } from '@/api/worksheets'
@@ -102,6 +102,14 @@ const categoriesStore = useCategoriesStore()
 const worksheets = ref<WorksheetListItem[]>([])
 const loading = ref(false)
 const error = ref<string | null>(null)
+
+// Фильтруем служебные категории (Главная, Генератор и т.д.)
+const filteredCategories = computed(() => {
+  const excludeSlugs = ['home', 'worksheet-generator']
+  return categoriesStore.categoryTree.filter(
+    (category) => !excludeSlugs.includes(category.slug)
+  )
+})
 
 async function loadLatestWorksheets() {
   loading.value = true
