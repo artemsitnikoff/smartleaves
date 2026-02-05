@@ -66,20 +66,23 @@
               </button>
 
               <!-- Выпадающее меню дочерних категорий -->
+              <!-- Добавляем padding-top чтобы создать "мост" между кнопкой и меню -->
               <div
                 v-show="openMenuId === category.id"
-                class="absolute left-0 mt-2 w-56 bg-white text-gray-800 rounded-lg shadow-xl transition-all duration-200 z-50"
+                class="absolute left-0 pt-2 z-50"
               >
-                <div class="py-2">
-                  <router-link
-                    v-for="child in category.children"
-                    :key="child.id"
-                    :to="`/category/${child.slug}`"
-                    class="block px-4 py-2 hover:bg-primary-50 hover:text-primary-700 transition-colors"
-                  >
-                    {{ child.name }}
-                    <span class="text-gray-500 text-sm ml-1">({{ child.worksheets_count }})</span>
-                  </router-link>
+                <div class="w-56 bg-white text-gray-800 rounded-lg shadow-xl">
+                  <div class="py-2">
+                    <router-link
+                      v-for="child in category.children"
+                      :key="child.id"
+                      :to="`/category/${child.slug}`"
+                      class="block px-4 py-2 hover:bg-primary-50 hover:text-primary-700 transition-colors"
+                    >
+                      {{ child.name }}
+                      <span class="text-gray-500 text-sm ml-1">({{ child.worksheets_count }})</span>
+                    </router-link>
+                  </div>
                 </div>
               </div>
             </div>
