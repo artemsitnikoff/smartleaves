@@ -8,10 +8,10 @@ set -e
 COMPOSE_FILE="docker-compose.prod.yml"
 
 # Определяем команду docker compose (поддержка старой и новой версии)
-if command -v docker-compose &> /dev/null; then
-    DOCKER_COMPOSE="docker-compose"
-else
+if docker compose version &> /dev/null; then
     DOCKER_COMPOSE="docker compose"
+else
+    DOCKER_COMPOSE="docker-compose"
 fi
 
 case "$1" in

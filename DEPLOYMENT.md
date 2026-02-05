@@ -4,7 +4,7 @@
 
 - ✅ **Воспроизводимость**: Одинаковое окружение на dev, staging и production
 - ✅ **Изоляция**: Каждый сервис в своем контейнере
-- ✅ **Простота**: Один файл docker-compose для всей инфраструктуры
+- ✅ **Простота**: Один файл Docker Compose для всей инфраструктуры
 - ✅ **Масштабируемость**: Легко добавлять новые сервисы
 - ✅ **Откат**: Быстрый возврат к предыдущей версии
 - ✅ **CI/CD**: Автоматический деплой через GitHub Actions
@@ -156,7 +156,7 @@ chmod +x deploy.sh
 
 ```bash
 # Создайте суперпользователя для админ-панели
-docker-compose -f docker-compose.prod.yml exec backend python manage.py createsuperuser
+docker compose -f docker-compose.prod.yml exec backend python manage.py createsuperuser
 
 # Следуйте инструкциям на экране
 ```
@@ -182,7 +182,7 @@ www → your_server_ip
 ./deploy.sh ssl your_email@example.com yourdomain.com
 
 # Также для www
-docker-compose -f docker-compose.prod.yml run --rm certbot certonly \
+docker compose -f docker-compose.prod.yml run --rm certbot certonly \
   --webroot \
   --webroot-path=/var/www/certbot \
   --email your_email@example.com \
@@ -201,7 +201,7 @@ nano nginx/conf.d/default.conf
 # Замените "yourdomain.com" на ваш домен
 
 # Перезапустите nginx
-docker-compose -f docker-compose.prod.yml restart nginx
+docker compose -f docker-compose.prod.yml restart nginx
 ```
 
 ### 10. Настройка автоматического деплоя (CI/CD)
@@ -275,17 +275,17 @@ cat ~/.ssh/github_smartleaves
 
 ```bash
 # Просмотр логов
-docker-compose -f docker-compose.prod.yml logs -f backend
-docker-compose -f docker-compose.prod.yml logs -f nginx
+docker compose -f docker-compose.prod.yml logs -f backend
+docker compose -f docker-compose.prod.yml logs -f nginx
 
 # Выполнение команд внутри контейнера
-docker-compose -f docker-compose.prod.yml exec backend python manage.py shell
-docker-compose -f docker-compose.prod.yml exec backend python manage.py migrate
-docker-compose -f docker-compose.prod.yml exec db psql -U smartleaves
+docker compose -f docker-compose.prod.yml exec backend python manage.py shell
+docker compose -f docker-compose.prod.yml exec backend python manage.py migrate
+docker compose -f docker-compose.prod.yml exec db psql -U smartleaves
 
 # Перезапуск конкретного сервиса
-docker-compose -f docker-compose.prod.yml restart backend
-docker-compose -f docker-compose.prod.yml restart nginx
+docker compose -f docker-compose.prod.yml restart backend
+docker compose -f docker-compose.prod.yml restart nginx
 ```
 
 ---
@@ -318,7 +318,7 @@ tar -czf backups/media_$(date +%Y%m%d).tar.gz -C /var/lib/docker/volumes/smartle
 
 ```bash
 # Восстановление базы данных
-cat backups/db_backup_YYYYMMDD_HHMMSS.sql | docker-compose -f docker-compose.prod.yml exec -T db psql -U smartleaves smartleaves
+cat backups/db_backup_YYYYMMDD_HHMMSS.sql | docker compose -f docker-compose.prod.yml exec -T db psql -U smartleaves smartleaves
 
 # Восстановление медиа файлов
 tar -xzf backups/media_YYYYMMDD.tar.gz -C /var/lib/docker/volumes/smartleaves_media_data/_data
@@ -358,7 +358,7 @@ git pull origin main
 
 ```bash
 # Статус контейнеров
-docker-compose -f docker-compose.prod.yml ps
+docker compose -f docker-compose.prod.yml ps
 
 # Использование ресурсов
 docker stats
@@ -388,7 +388,7 @@ journalctl -u docker -f
 ./deploy.sh logs backend
 
 # Проверьте конфигурацию
-docker-compose -f docker-compose.prod.yml config
+docker compose -f docker-compose.prod.yml config
 
 # Пересоберите образ
 ./deploy.sh rebuild
@@ -398,20 +398,20 @@ docker-compose -f docker-compose.prod.yml config
 
 ```bash
 # Проверьте статус
-docker-compose -f docker-compose.prod.yml exec db pg_isready -U smartleaves
+docker compose -f docker-compose.prod.yml exec db pg_isready -U smartleaves
 
 # Посмотрите логи
 ./deploy.sh logs db
 
 # Перезапустите
-docker-compose -f docker-compose.prod.yml restart db
+docker compose -f docker-compose.prod.yml restart db
 ```
 
 ### Nginx показывает 502 Bad Gateway
 
 ```bash
 # Проверьте что backend работает
-docker-compose -f docker-compose.prod.yml ps backend
+docker compose -f docker-compose.prod.yml ps backend
 
 # Посмотрите логи backend
 ./deploy.sh logs backend
@@ -483,7 +483,7 @@ redis:
 При возникновении проблем:
 1. Проверьте логи: `./deploy.sh logs`
 2. Проверьте статус: `./deploy.sh status`
-3. Проверьте конфигурацию: `docker-compose -f docker-compose.prod.yml config`
+3. Проверьте конфигурацию: `docker compose -f docker-compose.prod.yml config`
 
 ---
 
