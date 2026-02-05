@@ -45,10 +45,20 @@
           :key="category.id"
           class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
         >
-          <h3 class="text-xl font-bold mb-3">{{ category.name }}</h3>
+          <!-- Заголовок категории с количеством -->
+          <router-link
+            :to="`/category/${category.slug}`"
+            class="block mb-3 group"
+          >
+            <h3 class="text-xl font-bold group-hover:text-primary-600 transition-colors flex items-center justify-between">
+              <span>{{ category.name }}</span>
+              <span class="text-gray-400 text-sm font-normal">{{ category.worksheets_count }}</span>
+            </h3>
+          </router-link>
           <p class="text-gray-600 text-sm mb-4">{{ category.description }}</p>
 
-          <ul class="space-y-2">
+          <!-- Подкатегории если есть -->
+          <ul v-if="category.children && category.children.length > 0" class="space-y-2">
             <li v-for="child in category.children" :key="child.id">
               <router-link
                 :to="`/category/${child.slug}`"
@@ -59,6 +69,19 @@
               </router-link>
             </li>
           </ul>
+
+          <!-- Если нет подкатегорий - показываем кнопку "Смотреть все" -->
+          <div v-else class="mt-2">
+            <router-link
+              :to="`/category/${category.slug}`"
+              class="text-primary-600 hover:text-primary-700 text-sm font-medium inline-flex items-center"
+            >
+              Смотреть все
+              <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </router-link>
+          </div>
         </div>
       </div>
     </div>
