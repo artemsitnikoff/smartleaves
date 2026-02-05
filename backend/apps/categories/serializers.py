@@ -56,6 +56,7 @@ class CategoryTreeSerializer(serializers.ModelSerializer):
     - На главной странице для отображения всех категорий
     """
 
+    parent = CategoryParentSerializer(read_only=True)
     children = serializers.SerializerMethodField()
     full_path = serializers.SerializerMethodField()
     worksheets_count = serializers.SerializerMethodField()
@@ -64,7 +65,7 @@ class CategoryTreeSerializer(serializers.ModelSerializer):
         model = Category
         fields = [
             'id', 'name', 'slug', 'description',
-            'full_path', 'icon', 'order',
+            'parent', 'full_path', 'icon', 'order',
             'worksheets_count', 'children'
         ]
 
